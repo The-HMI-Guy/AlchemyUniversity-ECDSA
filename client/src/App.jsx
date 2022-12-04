@@ -18,7 +18,8 @@ function App() {
         address={address}
         setAddress={setAddress}
       />
-      <Transfer setBalance={setBalance} address={address} /> {/*should take
+      <Transfer setBalance={setBalance} address={address} />{" "}
+      {/*should take
       privateKey var send signature and server will validate*/}
     </div>
   );
