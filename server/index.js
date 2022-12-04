@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 const balances = {
-  "0x1": 100,
+  "7cdd9f238cedb1e37944495c27a3fac5e7e23792": 100,
   "0x2": 50,
   "0x3": 75,
 };
