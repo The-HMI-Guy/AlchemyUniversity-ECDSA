@@ -9,11 +9,12 @@ const PRIVATE_KEY =
 signedTransaction();
 
 async function signedTransaction() {
-  const sig = await signMessage("10");
-  const recoveryBit = true;
-  const recov = await recoverKey("10", sig, recoveryBit);
+  const [sig,recoveryBit] = await signMessage("10");
+  const publicKey = await recoverKey("10", sig, recoveryBit);
+  const address = toHex(getAddress(publicKey));
 
-//   console.log("Recovered: " + recov);
+  console.log("Recovered: " + toHex(publicKey));
+  console.log("Address: " + address);
 }
 
 async function signMessage(msg) {
@@ -26,6 +27,10 @@ function hashMessage(message) {
 async function recoverKey(message, signature, recoveryBit) {
   const messageHash = hashMessage(message);
   return secp.recoverPublicKey(messageHash, signature, recoveryBit);
+}
+function getAddress(publicKey) {
+    // the first byte indicates whether this is in compressed form or not
+    return keccak256(publicKey.slice(1)).slice(-20);
 }
 
 // Private Key: 0e9c7034df2b7b3717698a58728b59dbe0dfae0afe816bd501217893906952bb
