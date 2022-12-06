@@ -9,16 +9,30 @@ function Wallet({
   setAddress,
   balance,
   setBalance,
-  privateKey,
-  setPrivateKey,
+  signature,
+  setSignature,
 }) {
   async function onChange(evt) {
-    const privateKey = evt.target.value;
-    setPrivateKey(privateKey);
-    //const address = secp.getPublicKey(privateKey);
-    const publicKey = secp.getPublicKey(privateKey);
-    const address = keccak256(publicKey.slice(1)).slice(-20);
-    setAddress(toHex(address));
+    const signature = evt.target.value;
+    setSignature(signature);
+
+    // TODO: change the hard-coded msg to the amount sent via client
+    const publicKey = await recoverKey("10", signature, 1);
+    const address = toHex(getAddress(publicKey));
+    setAddress(address);
+
+    function hashMessage(message) {
+      return (message = keccak256(utf8ToBytes(message)));
+    }
+    async function recoverKey(message, signature, recoveryBit) {
+      const messageHash = hashMessage(message);
+      return secp.recoverPublicKey(messageHash, signature, recoveryBit);
+    }
+    function getAddress(publicKey) {
+      // the first byte indicates whether this is in compressed form or not
+      return keccak256(publicKey.slice(1)).slice(-20);
+    }
+
     if (address) {
       const {
         data: { balance },
@@ -34,10 +48,10 @@ function Wallet({
       <h1>Your Wallet</h1>
 
       <label>
-        Private Key
+        Signature
         <input
-          placeholder="Type in a private key"
-          value={privateKey}
+          placeholder="Enter signature"
+          value={signature}
           onChange={onChange}
         ></input>
       </label>

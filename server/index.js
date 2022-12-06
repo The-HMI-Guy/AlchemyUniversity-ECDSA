@@ -2,14 +2,15 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 3042;
+//const { address } = require("../client/src/Wallet");
 
 app.use(cors());
 app.use(express.json());
 
 const balances = {
-  "7cdd9f238cedb1e37944495c27a3fac5e7e23792": 100,
-  "0x2": 50,
-  "0x3": 75,
+  "393fc9eb56ba240cca447500230889cddd3dea41": 100,
+  "436fadc50945cda71b400e481f137eaef67583ce": 50,
+  "9cf2e8a466ca30d421380cc8c5cecddefd6c4a1d": 75,
 };
 
 app.get("/balance/:address", (req, res) => {
